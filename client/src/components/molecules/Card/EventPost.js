@@ -9,7 +9,7 @@ export default function EventPost({ data }) {
   const navigate = useNavigate();
 
   return (
-    <Container onClick={() => navigate(`${data.notice_id}`)}>
+    <Container onClick={() => navigate(`/notice/이벤트/${data.notice_id}`)}>
       <Thumbnail src={data.thumbnail} type="event" />
       <Description>
         <h3 className="event_name">{data.notice_name}</h3>

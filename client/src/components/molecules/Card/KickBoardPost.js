@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 
-import { Thumbnail, Profile, IconText, Profile2 } from "../../../components";
+import { Thumbnail, IconText, Profile2 } from "../../../components";
 
 import { modalOnAction } from "../../../store/actions/kickboard";
 
-import Alien from "../../../assets/images/alien.svg";
-import Astronaut from "../../../assets/images/astronaut.svg";
+// import Alien from "../../../assets/images/alien.svg";
+// import Astronaut from "../../../assets/images/astronaut.svg";
 
 export default function KickBoardPost({ data }) {
   const dispatch = useDispatch();
@@ -46,11 +46,11 @@ export default function KickBoardPost({ data }) {
           <div className="commentCount">{data.comments.length} 개의 댓글</div>
         </PostUser>
       </PostDescription>
-      <Interest>
+      {/* <Interest>
         <img src={Astronaut} alt="astronaut" />
         <div className="seperator"></div>
         <img src={Alien} alt="alien" />
-      </Interest>
+      </Interest> */}
     </Container>
   );
 }
@@ -63,7 +63,7 @@ const Container = styled.div`
   width: 20rem;
   margin: ${({ theme }) => theme.margins.xxl};
 
-  border-radius: 0.5rem;
+  border-radius: 0.3rem;
   box-shadow: 1px 1px 10px ${({ theme }) => theme.color.shadow};
 
   overflow: hidden;
@@ -93,7 +93,7 @@ const PostDescription = styled.div`
 `;
 
 const PostSummary = styled.div`
-  height: 8rem;
+  height: 6rem;
 
   h3 {
     font-size: ${({ theme }) => theme.fontSizes.xl};
@@ -107,7 +107,7 @@ const PostSummary = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     word-wrap: break-word;
   }
@@ -120,13 +120,13 @@ const PostUser = styled.div`
     font-size: ${({ theme }) => theme.fontSizes.xs};
     line-height: 1.8;
   }
-  .username {
+  /* .username {
     margin-left: ${({ theme }) => theme.margins.small};
     color: ${({ theme }) => theme.color.font} !important;
     font-weight: bold;
     font-size: ${({ theme }) => theme.fontSizes.small};
     line-height: 1.5;
-  }
+  } */
   .seperator {
     margin: 0 ${({ theme }) => theme.margins.small};
   }
@@ -135,18 +135,18 @@ const PostUser = styled.div`
   }
 `;
 
-const Interest = styled.div`
-  display: flex;
-  border-top: 0.1rem dashed gray;
-  padding-top: ${({ theme }) => theme.paddings.small};
-  padding-bottom: ${({ theme }) => theme.paddings.small};
-  padding-left: ${({ theme }) => theme.paddings.xxl};
-  padding-right: ${({ theme }) => theme.paddings.xxl};
+// const Interest = styled.div`
+//   display: flex;
+//   border-top: 0.1rem dashed gray;
+//   padding-top: ${({ theme }) => theme.paddings.small};
+//   padding-bottom: ${({ theme }) => theme.paddings.small};
+//   padding-left: ${({ theme }) => theme.paddings.xxl};
+//   padding-right: ${({ theme }) => theme.paddings.xxl};
 
-  img {
-    width: 1.5rem;
-  }
-  .seperator {
-    width: 100%;
-  }
-`;
+//   img {
+//     width: 1.5rem;
+//   }
+//   .seperator {
+//     width: 100%;
+//   }
+// `;

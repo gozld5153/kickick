@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 import {
@@ -8,6 +8,7 @@ import {
   MainNotice,
   MainRecommend,
   MainEvent,
+  Spinner,
 } from "../../components";
 import { getNoticesInfo, getNoticesList } from "../../apis/notices"
 import { recommendedPost } from "../../apis/posts";
@@ -20,16 +21,16 @@ export default function Main() {
   const [kickListInfo, setKickList] = useState({});
   const [noticeInfo, setNoticeInfo] = useState({})
   const [eventInfo, setEventInfo] = useState([])
-  const [kickListLoding, setKickListLoding] = useState(false);
-  const [noticeLoding, setNoticeLoding] = useState(false);
-  const [eventLoding, setEventLoding] = useState(false);
+  const [kickListloading, setKickListloading] = useState(false);
+  const [noticeloading, setNoticeloading] = useState(false);
+  const [eventloading, setEventloading] = useState(false);
 
-  const isLoding = noticeLoding && eventLoding && kickListLoding;
+  const loading = noticeloading && eventloading && kickListloading;
+  console.log(noticeloading, eventloading, kickListloading);
 
   useEffect(() => {
     // 첫방문인지 체크하고 첫 방문이면 이동
     firstEnterCheck().then((res) => {
-      console.log(res.data.data);
       if (!res.data.data.token && !Object.keys(res.data.data).includes("is_visited")) {
         navigate("/modal/firstenter");
       }
@@ -41,13 +42,12 @@ export default function Main() {
     // 킥 추천 불러오기
     recommendedPost()
       .then((res) => setKickList(res.data.data))
-      .then(() => setKickListLoding(true));
+      .then(() => setKickListloading(true));
     // 가장 최신 공지 하나 불러오기
     getNoticesList({ type: "notices", limit: 1, page_num: 1 }).then((res) => {
-      console.log(res.data.data);
       getNoticesInfo(res.data.data[0].notice_id)
         .then((res) => setNoticeInfo(res.data.data))
-        .then(() => setNoticeLoding(true));
+        .then(() => setNoticeloading(true));
     });
     // 이벤트 리스트 불러오기
     getNoticesList({ type: "events", limit: 4, page_num:1 })
@@ -55,12 +55,16 @@ export default function Main() {
         setEventInfo([...res.data.data]);
         dispatch(getListAction(res.data));
       })
-      .then(() => setEventLoding(true));
+      .then(() => setEventloading(true));
   }, []);
   
-  // console.log("isLoding", isLoding);
+  // console.log("isloading", isloading);
+
+  if (!loading) return <Spinner />;
+
   return (
     <Container>
+      <MiniTitle>KICKICK</MiniTitle>
       <ContentSection>
         <MainMiniNav />
         <MainRecommend kickListInfo={kickListInfo} />
@@ -93,6 +97,19 @@ const Container = styled.div`
   padding: 0 5vw;
 `;
 
+
+const MiniTitle = styled.div`
+  display: none;
+
+  @media ${({ theme }) => theme.device.tablet} {
+    display: inline;
+    margin-top: 1.5rem;
+    font-size: 4rem;
+    font-family: ${({ theme }) => theme.fontFamily.luckiestGuy};
+    color: ${({ theme }) => theme.color.font};
+  }
+`;
+
 const ContentSection = styled.section`
   display: flex;
   flex-direction: column;
@@ -110,5 +127,6 @@ const Title = styled.p`
 
 const ContextContainer = styled.article`
   display: flex;
+  justify-content:center;
   width: 80vw;
 `;

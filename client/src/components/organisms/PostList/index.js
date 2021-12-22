@@ -13,22 +13,18 @@ const postList = [
   {
     reducer: ["mypage", "mypost"],
     type: "mypagemypost",
-    label: ["태그", "제목", "날짜", "조회수"],
+    label: ["게시판", "제목", "날짜", "조회수"],
   },
   {
     reducer: ["mypage", "mycomment"],
     type: "mypagemycomment",
     label: ["글 제목", "댓글", "날짜"],
   },
-  // {
-  //   reducer: ["mypage", "kick"],
-  //   type: "mypagekick",
-  //   label: ["글 제목", "댓글", "날짜"],
-  // },
+
   {
     reducer: ["mypage", "log"],
     type: "mypagelog",
-    label: ["날짜", "변동", "이벤트"],
+    label: ["날짜", "변동", "활동"],
   },
   {
     reducer: ["board"],
@@ -79,6 +75,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  min-height: 15rem;
 `;
 
 const NoPostContainer = styled.div`

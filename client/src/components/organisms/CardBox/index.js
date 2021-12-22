@@ -45,21 +45,14 @@ export default function CardBox({ type }) {
   if (type === "mykick") data = kicklist;
   else data = list;
 
-  if (!data) return <NoPost />;
+  if (!data || data.length === 0) return <NoPost />;
 
-  return (
-    <Container>
-      {data.length === 0 ? (
-        <NoPost />
-      ) : (
-        data.map((el, idx) => component(idx, el))
-      )}
-    </Container>
-  );
+  return <Container>{data.map((el, idx) => component(idx, el))}</Container>;
 }
 
 const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
+  width:100%;
   color: ${({ theme }) => theme.color.font};
 `;

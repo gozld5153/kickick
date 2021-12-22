@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useLocation, Outlet } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
   MyPageAside,
@@ -12,6 +12,7 @@ import {
   CardBox,
   Calendar,
   Pagination,
+  Spinner,
 } from "../../components";
 
 import { FaArrowLeft } from "react-icons/fa";
@@ -50,35 +51,38 @@ import {
 } from "../../commons/constants/mypage";
 
 const pageList = [
-  { category: "home", component: <Home /> },
-  { category: "profile", component: <Profile />, title: PROFILE },
-  { category: "attendance", component: <Attendance />, title: ATTENDANCE },
-  { category: "favorites", component: <Favorites />, title: FAVORITES },
-  { category: "mypost", component: <MyPost />, title: MY_POST },
-  { category: "mycomment", component: <MyComment />, title: MY_COMMENT },
-  { category: "kick", component: <PurchasedKick />, title: PURCHASED_KICK },
-  { category: "log", component: <KickmoneyLog />, title: KICKMONEY_LOG },
+  { category: "home", title: null },
+  { category: "profile", title: PROFILE },
+  { category: "attendance", title: ATTENDANCE },
+  { category: "favorites", title: FAVORITES },
+  { category: "mypost", title: MY_POST },
+  { category: "mycomment", title: MY_COMMENT },
+  { category: "kick", title: PURCHASED_KICK },
+  { category: "log", title: KICKMONEY_LOG },
 ];
 
 export default function MyPage() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { category } = useParams();
-  const { component, title } = pageList.find((el) => el.category === category);
   const { isLogin } = useSelector((state) => state.login);
 
   useEffect(() => {
     dispatch(resetPaginationAction());
-  }, [category, dispatch]);
+  }, [dispatch]);
 
-  if (!isLogin) return <div>d</div>;
+  if (!isLogin || isLogin.type === "guest") {
+    navigate("/error");
+    return <div></div>;
+  }
+
   return (
     <>
       <Landscape />
       <Container>
         <MyPageAside />
         <SubContainer>
-          {category !== "home" && <Navigator title={title} />}
-          {component}
+          <Navigator />
+          <Outlet />
         </SubContainer>
       </Container>
     </>
@@ -89,6 +93,7 @@ export function Home() {
   const { isLogin } = useSelector((state) => state.login);
   const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     getClassifiedPost()
       .then((data) => {
@@ -97,7 +102,9 @@ export function Home() {
       })
       .catch((err) => console.log(err.response));
   }, []);
-  if (loading) return <div>d</div>;
+
+  if (loading) return <Spinner />;
+
   return (
     <HomeWrapper>
       {isLogin.type === "admin" && (
@@ -163,7 +170,7 @@ export function Attendance() {
       .catch((err) => console.log(err));
   }, []);
 
-  if (loading) return <div>d</div>;
+  if (loading) return <Spinner />;
 
   return (
     <AttendanceContainer>
@@ -208,6 +215,7 @@ export function MyComment() {
   useEffect(() => {
     getComments(null, null, postsearch.selectPage)
       .then((data) => {
+        console.log(data.data);
         dispatch(getMyCommentAction(data.data));
       })
       .catch((err) => console.log(err.response));
@@ -252,19 +260,25 @@ export function KickmoneyLog() {
   return <PostList type="mypagelog" />;
 }
 
-export function Navigator({ title }) {
+export function Navigator() {
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const route = pathname.split("/")[2];
+  const { title } = pageList.find((el) => el.category === route);
   return (
     <NavContainer>
-      <FaArrowLeft
-        onClick={() => {
-          navigate(-1);
-          dispatch(resetPaginationAction());
-        }}
-      />
-      <h2>{title}</h2>
+      {title && (
+        <>
+          <FaArrowLeft
+            onClick={() => {
+              navigate(-1);
+              dispatch(resetPaginationAction());
+            }}
+          />
+          <h2>{title}</h2>
+        </>
+      )}
     </NavContainer>
   );
 }

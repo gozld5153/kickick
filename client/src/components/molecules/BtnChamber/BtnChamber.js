@@ -20,7 +20,7 @@ export default function BtnChamber() {
         <NavBtn
           context={el.context}
           pathname={el.pathname}
-          size="1.4rem"
+          size="1.1rem"
           key={el.context}
           isSubNav={el.isSubNav}
           isHover={isHover}

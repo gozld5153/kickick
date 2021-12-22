@@ -26,6 +26,8 @@ export MULTER_REGION=$(aws ssm get-parameters --region ap-northeast-2 --names MU
 export NODEMAILER_EMAIL=$(aws ssm get-parameters --region ap-northeast-2 --names NODEMAILER_EMAIL --query Parameters[0].Value | sed 's/"//g')
 export NODEMAILER_PASSWORD=$(aws ssm get-parameters --region ap-northeast-2 --names NODEMAILER_PASSWORD --query Parameters[0].Value | sed 's/"//g')
 
+export CLIENT_URL=$(aws ssm get-parameters --region ap-northeast-2 --names CLIENT_URL --query Parameters[0].Value | sed 's/"//g')
+
 export BUCKET_NAME=$(aws ssm get-parameters --region ap-northeast-2 --names BUCKET_NAME --query Parameters[0].Value | sed 's/"//g')
 
 export NODE_ENV="production"

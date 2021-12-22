@@ -34,5 +34,5 @@ export default function InfiniteScroll({ callback }) {
 const Container = styled.div`
   position: relative;
 
-  top: -20vh;
+  top: -70vh;
 `;

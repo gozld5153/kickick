@@ -2,7 +2,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import { combineReducers } from "redux";
 import storage from "redux-persist/lib/storage";
-import logger from "redux-logger";
 
 import {
   kickboardReducer,
@@ -28,6 +27,7 @@ const persistConfig = {
 
 const reducers = combineReducers({
   postInfo: postInfoReducer,
+  preThemeMode: preThemeReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);
@@ -42,7 +42,6 @@ export const store = configureStore({
     tag: tagReducer,
     login: loginReducer,
     themeMode: themeReducer,
-    preThemeMode: preThemeReducer,
     mypage: mypageReducer,
     socket: socketReducer,
     alarmList: alarmListReducer,
@@ -50,9 +49,8 @@ export const store = configureStore({
     comments: commentsReducer,
   },
 
-  // middleware: (getDefaultMiddleware) =>
-  //   getDefaultMiddleware({ serializableCheck: false }),
-  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
 });
 
 export default store;

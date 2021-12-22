@@ -54,7 +54,7 @@ export const iconList = [
   { icon: <FaStar />, label: "구매함", category: "킥보드" },
 ];
 
-export default function IconText({ label, handleClick, board }) {
+export default function IconText({ label, handleClick }) {
   const { icon, color, category } = iconList.find((i) => i.label === label);
   const { align } = useSelector((state) => state.postsearch);
 
@@ -64,7 +64,6 @@ export default function IconText({ label, handleClick, board }) {
       isActive={align === label}
       color={color}
       category={category}
-      board={board}
     >
       {category === "공지" ? (
         <>
@@ -120,15 +119,7 @@ const Container = styled.div`
       }
     `}
 
-    ${({ category, board }) =>
-    category === "게시판" &&
-    board &&
-    css`
-      font-size: 2rem;
-      svg {
-        font-size: 2.5rem;
-      }
-    `}
+ 
 
     ${({ category }) =>
     category === "마이페이지" &&

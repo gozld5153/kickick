@@ -11,7 +11,11 @@ export default function TagInput({ tagArr, setTagArr, category, readOnly }) {
       let newTag = tagArr.slice(0, -1);
       setTagArr(newTag);
     }
-    if ((e.code === "Enter" && value) || (e.code === "NumpadEnter" && value)) {
+    if (
+      (e.code === "Enter" && value) ||
+      (e.code === "NumpadEnter" && value) ||
+      (e.code === "Tab" && value)
+    ) {
       let dummy = [...tagArr];
       if (value === category) return;
       if (dummy.length === 2) return;

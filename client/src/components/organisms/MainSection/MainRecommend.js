@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
 
 import { FaChevronRight } from "react-icons/fa";
+import { KickConfirm } from "../../../components";
+import { modalOnAction } from "../../../store/actions/kickboard";
 
 export default function MainRecommend({
   kickListInfo = { data_by_3days: [], data_by_tags: [], data_by_time:[]},
 }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isSelect, setIsSelect] = useState(0);
+  const { kickboard } = useSelector((state) => state);
 
   const selectHandler = (direction) => {
     if (direction === "left" && isSelect > 0) {
@@ -23,7 +28,14 @@ export default function MainRecommend({
     }
   };
 
-  // console.log("kick", Object.keys(kickListInfo));
+  const kickMoveHanlder = (data) => {
+    console.log(data)
+    if (data.is_purchased) {
+      navigate(`/detailkick/${data.kick.kick_id}`);
+      return;
+    }
+    dispatch(modalOnAction(data));
+  }
   return (
     <Container>
       {/* <BtnContainer>
@@ -54,7 +66,7 @@ export default function MainRecommend({
               </ContentPage> */}
               <ContentPage name="time">
                 {kickListInfo.data_by_time.map((el, idx) => (
-                  <KickBtn key={idx} onClick={() => navigate(`/detailkick`)}>
+                  <KickBtn key={idx} onClick={() => kickMoveHanlder(el)}>
                     {el.post_name}
                   </KickBtn>
                 ))}
@@ -72,6 +84,7 @@ export default function MainRecommend({
               <div>게시글이 없습니다.</div>
             </ContentPage>
           )}
+          {kickboard.modalState && <KickConfirm />}
         </ContentFrame>
       </ContentContainer>
     </Container>

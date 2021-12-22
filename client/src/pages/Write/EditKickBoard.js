@@ -14,13 +14,14 @@ import {
   Profile,
   Thumbnail,
   TagInput,
+  Spinner,
 } from "../../components";
 
 import {
   getCategoryAction,
   getPostNameAction,
   getContentAction,
-  getKickContentAction,
+  getMainContentAction,
   resetPostAddAction,
 } from "../../store/actions/postadd";
 
@@ -39,6 +40,8 @@ export default function EditKickBoard({ themeCode }) {
   const [thumbnail, setThumbnail] = useState();
   const [file, setFile] = useState();
   const [tagArr, setTagArr] = useState([]);
+  const [disabed, setDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleViewPostName = (e) => {
     setPostname(e.target.value);
@@ -55,10 +58,12 @@ export default function EditKickBoard({ themeCode }) {
   };
 
   const handleContent = () => {
-    dispatch(getKickContentAction(content));
+    dispatch(getMainContentAction(content));
   };
 
   const handleClick = () => {
+    setDisabled(true);
+    setLoading(true);
     createPost(postAdd.category, postAdd.post_name, postAdd.content)
       .then((data) => {
         const post_id = data.data.data.post_id;
@@ -68,11 +73,13 @@ export default function EditKickBoard({ themeCode }) {
           uploadSingleImage(formData, "post").then((data) => {
             const location = data.data.data.location;
             createKicks(post_id, location, content).then(() => {
+              setLoading(false);
               navigate(`/kickboard/${category}`);
             });
           });
         } else {
           createKicks(post_id, null, content).then(() => {
+            setLoading(false);
             navigate(`/kickboard/${category}`);
           });
         }
@@ -88,6 +95,8 @@ export default function EditKickBoard({ themeCode }) {
     dispatch(resetPostAddAction());
     dispatch(getCategoryAction(category, "킥"));
   }, [dispatch, category]);
+
+  if (loading) return <Spinner />;
 
   return (
     <Container>
@@ -122,7 +131,12 @@ export default function EditKickBoard({ themeCode }) {
         </InfoContainer>
 
         <BtnContainer>
-          <Common label="등록" type="bigger" handleClick={handleClick} />
+          <Common
+            label="등록"
+            type="bigger"
+            handleClick={handleClick}
+            disabled={disabed}
+          />
         </BtnContainer>
       </WritePage>
       <ViewPage>
@@ -183,7 +197,7 @@ const ViewPage = styled.div`
 
   > h1 {
     font-size: 2.8rem;
-    height: 4.5rem;
+    min-height: 5rem;
     padding: 0.5rem;
     color: ${({ theme }) => theme.color.font};
   }

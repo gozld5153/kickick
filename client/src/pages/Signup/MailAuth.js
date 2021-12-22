@@ -17,7 +17,6 @@ export default function MailAuth() {
   useEffect(() => { 
     mailCheck(params.username)
       .then((res) => {
-        console.log(res)
         if (res.data.message === "ok") {
           setIsSuccess(true);
         }

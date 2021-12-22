@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styled, { ThemeProvider } from "styled-components";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { io } from "socket.io-client";
 
 import { Nav, Footer, PageUp, CommonModal } from "./components";
 import Main from "./pages/Main";
+import Intro from "./pages/Intro"
 import Login from "./pages/Login";
-import SignupSelect from "./pages/Signup/SignupSelect";
 import Signup from "./pages/Signup";
 import MailAuth from "./pages/Signup/MailAuth";
 import Board from "./pages/Board/Board";
@@ -21,11 +26,21 @@ import MyEditBoard from "./pages/Write/MyEditBoard";
 import EditKickBoard from "./pages/Write/EditKickBoard";
 import EditNotice from "./pages/Write/EditNotice";
 import Write from "./pages/Write";
-import MyPage from "./pages/MyPage";
 import Error from "./pages/Error/Page404";
 import KakaoAuth from "./pages/Login/KakaoAuth";
 import NaverAuth from "./pages/Login/NaverAuth";
 import GoogleAuth from "./pages/Login/GoogleAuth";
+import MyPage from "./pages/MyPage";
+import {
+  Home,
+  Profile,
+  Attendance,
+  Favorites,
+  MyPost,
+  MyComment,
+  PurchasedKick,
+  KickmoneyLog,
+} from "./pages/MyPage";
 
 import { light, dark } from "./commons/styles/theme";
 import { nowImLogin } from "./apis/auth";
@@ -43,7 +58,7 @@ export default function App() {
   const socketClient = io(`${process.env.REACT_APP_API_URL}`);
   const isLogin = useSelector((state) => state.login.isLogin);
   const todayLogin = useSelector((state) => state.login.todayLogin);
-  const preThemeMode = useSelector((state) => state.preThemeMode);
+  const preThemeMode = useSelector((state) => state.persist.preThemeMode);
   const themeMode = useSelector((state) => state.themeMode);
   const socketChange = useSelector((state) => state.socket);
   const list = ["학습", "여가", "생활", "경제", "여행", "예술"];
@@ -84,7 +99,7 @@ export default function App() {
       });
 
       socketClient.on("alarms", (data) => {
-        // console.log("난 1이야", data);
+        // console.log("받았음", data);
         dispatch(alarmListAction(data));
       });
 
@@ -130,6 +145,7 @@ export default function App() {
               <Route path="google" element={<GoogleAuth />} />
               <Route path="modal/:modal" element={<CommonModal />} />
             </Route>
+            <Route path="/intro" element={<Intro />} />
             <Route path="login" element={<Login />} />
             {/* <Route path="signup" element={<SignupSelect />} /> */}
             <Route path="signup" element={<Signup />} />
@@ -150,7 +166,10 @@ export default function App() {
               path="myeditboard/:category/:post_id"
               element={<MyEditBoard themeCode={themeMode[1]} list={list} />}
             />
-            <Route path="kickboard/:category" element={<KickBoard />} />
+            <Route
+              path="kickboard/:category"
+              element={<KickBoard themeCode={themeMode[1]} />}
+            />
             <Route
               path="detailkick/:kick_id"
               element={<DetailKickBoard themeCode={themeMode[1]} />}
@@ -159,7 +178,17 @@ export default function App() {
               path="editkick/:category"
               element={<EditKickBoard themeCode={themeMode[1]} />}
             />
-            <Route path="mypage/:category" element={<MyPage />} />
+            <Route path="mypage" element={<Navigate to="/mypage/home" />} />
+            <Route path="mypage" element={<MyPage />}>
+              <Route path="home" element={<Home />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="attendance" element={<Attendance />} />
+              <Route path="favorites" element={<Favorites />} />
+              <Route path="mypost" element={<MyPost />} />
+              <Route path="mycomment" element={<MyComment />} />
+              <Route path="kick" element={<PurchasedKick />} />
+              <Route path="log" element={<KickmoneyLog />} />
+            </Route>
             <Route
               path="notice/:category"
               element={<Notice themeCode={themeMode[1]} />}
@@ -171,8 +200,14 @@ export default function App() {
             </Route>
             <Route path="notice/:category/edit" element={<EditNotice />} />
             <Route path="write" element={<Write />}>
-              <Route path="board" element={<EditBoard />} />
-              <Route path="kickboard" element={<EditKickBoard />} />
+              <Route
+                path="board"
+                element={<EditBoard themeCode={themeMode[1]} list={list} />}
+              />
+              <Route
+                path="kickboard"
+                element={<EditKickBoard themeCode={themeMode[1]} />}
+              />
               <Route path="notice" element={<EditNotice />} />
             </Route>
             <Route path="*" element={<Error />} />
@@ -190,12 +225,18 @@ const Container = styled.div`
   min-height: 100vh;
   padding-top: 4rem;
   background-color: ${({ theme }) => theme.color.back};
+
+  @media ${({ theme }) => theme.device.tablet} {
+    padding-top: 0rem;
+    padding-bottom: 7rem;
+  }
 `;
 
-const Theme = styled.img`
-  position: relative;
-  height: 100vh;
-`;
+  const Theme = styled.img`
+    position: relative;
+    height: 100vh;
+    margin: 0 -1rem;
+  `;
 
 const DarkBox = styled.div`
   position: relative;
@@ -226,8 +267,10 @@ const ModeChanger = styled.div`
 
 const LightChanger = styled(ModeChanger)`
   animation-duration: 2s;
+  z-index: 99999999;
 `;
 
 const DarkChanger = styled(ModeChanger)`
   animation-duration: 2.2s;
+  z-index: 99999999;
 `;

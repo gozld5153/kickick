@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation } from "react-router-dom"
+import { useLocation,useNavigate } from "react-router-dom"
 import styled from "styled-components";
 import disableScroll from "disable-scroll";
 
@@ -8,11 +8,19 @@ import { FirstEnter, Calendar } from "../../../components";
 
 export default function CommonModal() {
   const location = useLocation();
+  const navigate = useNavigate();
   const modalName = location.pathname.split("/")[2];
 
   disableScroll.on();
+
+  const closeHanlder = () => {
+    if (modalName === "calendar") {
+      disableScroll.off();
+      navigate("/",{replace:true})
+    }
+  }
   return (
-    <Container>
+    <Container onClick={closeHanlder}>
       {modalName === "firstenter" ? (
         <FirstEnter />
       ) : modalName === "calendar" ? (

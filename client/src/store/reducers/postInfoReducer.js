@@ -24,7 +24,7 @@ const initialState = {
 export default function postInfoReducer(state = {}, action) {
   switch (action.type) {
     case GET_POST_INFO:
-      action.payload.created_at = dateConverter(action.payload.created_at);
+      action.payload.created_at = action.payload.created_at.split("T")[0];
       const payload = state.main_content
         ? { ...state, ...action.payload }
         : { ...action.payload };

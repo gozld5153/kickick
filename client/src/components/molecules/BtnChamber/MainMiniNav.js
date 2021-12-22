@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-import Saturn from "../../../assets/images/planet/art.png"
-import moon from "../../../assets/images/planet/economy.png";
-import earth from "../../../assets/images/planet/leisure.png";
-import Mars from "../../../assets/images/planet/life.png";
-import Uranus from "../../../assets/images/planet/studyplanet.png";
-import sun from "../../../assets/images/planet/trip.png";
+import Saturn from "../../../assets/images/category/artplanet.png";
+import moon from "../../../assets/images/category/economyplanet.png";
+import earth from "../../../assets/images/category/leisureplanet.png";
+import Mars from "../../../assets/images/category/lifeplanet.png";
+import Uranus from "../../../assets/images/category/studyplanet.png";
+import sun from "../../../assets/images/category/travelplanet.png";
 import redGirl from "../../../assets/images/people/7.png";
 import whiteGuy from "../../../assets/images/people/6.png";
 import redhatGirl from "../../../assets/images/people/5.png";
@@ -61,12 +61,12 @@ export default function MainMiniNav() {
       </ModeContainer>
       <ModeContainer isVisible={themeMode[1] === "dark"}>
         <StarContainer>
-          {starLocation.map((el) => (
-            <Star src={star} top={el.top} left={el.left} alt="star" />
+          {starLocation.map((el, idx) => (
+            <Star src={star} key={idx} top={el.top} left={el.left} alt="star" />
           ))}
         </StarContainer>
-        {peopleList.map((el) => (
-          <BtnFrame key={el[0]} onClick={() => navigate(`/kickboard/${el[0]}`)}>
+        {peopleList.map((el, idx) => (
+          <BtnFrame key={idx} onClick={() => navigate(`/kickboard/${el[0]}`)}>
             <BtnName>{el[0]}</BtnName>
             <Planet src={el[2]} alt="people" />
           </BtnFrame>
@@ -118,7 +118,7 @@ const BtnFrame = styled.button`
 
 const BtnName = styled.p`
   font-size: 1.2vw;
-  color:${({theme}) => theme.color.font};
+  color: ${({ theme }) => theme.color.font};
   pointer-events: none;
 `;
 
@@ -159,12 +159,14 @@ const StarContainer = styled.div`
   left: 0;
   width: 80vw;
   height: 10vw;
+
+  pointer-events: none;
 `;
 
 const Star = styled.img`
   position: relative;
-  top:${({ top }) => top};
-  left:${({left})=> left};
+  top: ${({ top }) => top};
+  left: ${({ left }) => left};
   width: 2vw;
   height: 2vw;
 `;

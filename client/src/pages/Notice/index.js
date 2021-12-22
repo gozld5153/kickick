@@ -1,23 +1,31 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, Outlet, useNavigate, useLocation } from "react-router";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import { CardBox, BoardTop, IconText, Common } from "../../components";
+import { CardBox, BoardTop, IconText, Common, Spinner } from "../../components";
 
 import { getNoticesList } from "../../apis/notices";
 
 import { getListAction } from "../../store/actions/postlist";
-
+import { resetPaginationAction } from "../../store/actions/postsearch";
 const noticeList = [
   { category: "소식", component: <News /> },
   { category: "이벤트", component: <Event /> },
 ];
 
 export default function Notice({ themeCode }) {
+  const { pathname } = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { category } = useParams();
+  const route = decodeURI(pathname.split("/")[2]);
+
+  useEffect(() => {
+    dispatch(resetPaginationAction());
+  }, [dispatch]);
+
   if (category !== "소식" && category !== "이벤트") {
     navigate("/error");
     return <div></div>;
@@ -31,12 +39,18 @@ export default function Notice({ themeCode }) {
       <Container>
         <NavContainer>
           <h3>공지</h3>
-          <NavLink to="/notice/소식">
+          <StyledLink
+            to="/notice/소식"
+            highlight={(route === "소식").toString()}
+          >
             <IconText label="뉴스" />
-          </NavLink>
-          <NavLink to="/notice/이벤트">
+          </StyledLink>
+          <StyledLink
+            to="/notice/이벤트"
+            highlight={(route === "이벤트").toString()}
+          >
             <IconText label="이벤트" />
-          </NavLink>
+          </StyledLink>
         </NavContainer>
         <ContentContainer>
           <Outlet />
@@ -69,14 +83,16 @@ export function News() {
     });
   }, [postsearch.selectPage, dispatch, pathname]);
 
-  if (loading) return <div>d</div>;
+  if (loading) return <Spinner />;
   return (
-    <NewsContainer>
+    <>
+      <NewsContainer>
+        <CardBox type="news" />
+      </NewsContainer>
       {login.isLogin.type === "admin" && (
         <Common type="new" label="글쓰기" handleClick={handleNewPost} />
       )}
-      <CardBox type="news" />
-    </NewsContainer>
+    </>
   );
 }
 
@@ -101,15 +117,18 @@ export function Event() {
       setLoading(false);
     });
   }, [postsearch.selectPage, dispatch, pathname]);
-  if (loading) return <div>d</div>;
+
+  if (loading) return <Spinner />;
 
   return (
-    <EventContainer>
+    <>
+      <EventContainer>
+        <CardBox type="event" />
+      </EventContainer>
       {login.isLogin.type === "admin" && (
         <Common type="new" label="글쓰기" handleClick={handleNewPost} />
       )}
-      <CardBox type="event" />
-    </EventContainer>
+    </>
   );
 }
 
@@ -117,11 +136,13 @@ const Container = styled.div`
   display: flex;
   width: 90rem;
   margin: 3rem auto;
+  padding: 1rem;
   gap: 1rem;
   min-height: 30vh;
 
   @media ${({ theme }) => theme.device.notebookL} {
     width: 64rem;
+    flex-direction: column;
   }
   @media ${({ theme }) => theme.device.notebookS} {
     width: 48rem;
@@ -168,14 +189,20 @@ const NavContainer = styled.div`
     color: ${({ theme }) => theme.color.font};
   }
 
-  .active {
-    color: purple;
-    font-weight: bold;
-  }
-
   @media ${({ theme }) => theme.device.notebookL} {
-    display: none;
+    flex-direction: row;
+    width: 100%;
+    height: 5rem;
   }
+`;
+
+const StyledLink = styled(Link)`
+  ${({ highlight }) =>
+    highlight === "true" &&
+    css`
+      color: ${({ theme }) => theme.color.noticeNav} !important;
+      font-weight: bold;
+    `}
 `;
 
 const EventContainer = styled.div`
@@ -187,6 +214,9 @@ const EventContainer = styled.div`
 const NewsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 48rem;
+
   margin: 0 auto;
+  @media ${({ theme }) => theme.device.mobileL} {
+    width: 100%;
+  }
 `;

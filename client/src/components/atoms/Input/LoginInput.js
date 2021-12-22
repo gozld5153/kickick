@@ -17,6 +17,7 @@ export default function LoginInput({
   // 로그인, 회원가입에 쓰이는 인풋 박스 디자인
   const [isChange, setIsChange] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [isFocus, setIsFocus] = useState(false)
 
   const isValidation = !validation(part,inputValue).isValid
   const contextHandler = (e) => {
@@ -45,6 +46,7 @@ export default function LoginInput({
       inputValue={inputValue}
       isChange={isChange}
       isValidation={!validation(part, inputValue).isValid}
+      isFocus={isFocus}
     >
       <WarningBox
         height={height}
@@ -67,6 +69,8 @@ export default function LoginInput({
         onChange={contextHandler}
         onKeyUp={validContoller}
         onKeyPress={movePasswordInput}
+        onFocus={() => setIsFocus(true)}
+        onBlur={() => setIsFocus(false)}
         ref={coordinate}
       />
     </Container>
@@ -82,18 +86,22 @@ const Container = styled.div`
   height: ${({ height }) => `${height}rem`};
   margin: 0.5rem 0;
   padding: ${({ height }) => `${height * 0.08}rem`};
-  border: 0.1rem solid;
-  border-color: ${({ isChange, isValidation, theme }) =>
-    isChange === true && isValidation
+  border: 0.15rem solid;
+  border-color: ${({ isChange, isValidation, isFocus }) =>
+    isChange === true && isValidation && isFocus
       ? //한번이라도 입력했는데 벨리데이션을 통과 못함.
-        "red"
-      : isChange === true && !isValidation
+        "#FF5655"
+      : isChange === true && !isValidation && isFocus
       ? //한번이라도 입력한 후, 벨리데이션을 통과함.
-        "blue"
-      : "#222222"};
+        "#44AA00"
+      : "#333333"};
   border-radius: ${({ height }) => `${height * 0.08}rem`};
   background-color: #ffffff;
   overflow: hidden;
+
+  @media ${({ theme }) => theme.device.tablet} {
+    width: 20rem;
+  }
 `;
 
 const Input = styled.input`
@@ -115,11 +123,11 @@ const WarningBox = styled.div`
   color: ${({ isChange, isValidation, theme }) =>
     isChange === true && isValidation
       ? //한번이라도 입력했는데 벨리데이션을 통과 못함.
-        "red"
+        "#FF5655"
       : isChange === true && !isValidation
       ? //한번이라도 입력한 후, 벨리데이션을 통과함.
-        "blue"
-      : theme.color.placeholderGray};
+        "#44AA00"
+      : "#666666"};
   transition: font-size 0.15s;
   pointer-events: none;
 `;

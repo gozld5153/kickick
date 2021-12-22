@@ -274,7 +274,7 @@ module.exports = async (req, res) => {
     data = post_info.rows.map((el) => el.get({ plain: true }));
 
     // 각 게시물에 접근
-    data.forEach(async (post) => {
+    data.forEach((post) => {
       // likes 가공
       let likes_obj = {
         true: 0,

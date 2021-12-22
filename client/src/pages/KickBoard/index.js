@@ -25,12 +25,10 @@ import {
   selectPageAction,
 } from "../../store/actions/postsearch";
 
-export default function KickBoard() {
+export default function KickBoard({ themeCode }) {
   const { category } = useParams();
   const dispatch = useDispatch();
-  const { kickboard, postsearch, postAdd, login } = useSelector(
-    (state) => state
-  );
+  const { kickboard, postsearch, postAdd } = useSelector((state) => state);
   const [loading, setLoading] = useState(true);
   const [onScroll, setOnScroll] = useState(true);
 
@@ -85,7 +83,7 @@ export default function KickBoard() {
 
   return (
     <>
-      <BoardTop />
+      <BoardTop themeCode={themeCode} />
       <Container>
         <TotalSearch type="kick" />
         <CardBox type="kickboard" />

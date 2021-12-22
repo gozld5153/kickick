@@ -53,6 +53,9 @@ const NoticeDetailContainer = styled.div`
   gap: 3rem;
   width: 48rem;
   margin: 0 auto;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  background-color: ${({ theme }) => theme.color.noticeBack};
 
   h2 {
     font-size: 2rem;
@@ -83,7 +86,6 @@ const NoticeDetailInfo = styled.div`
 
 const NoticeDetailContent = styled.div`
   min-height: 30rem;
-  background-color: ${({ theme }) => theme.color.noticeBack};
 `;
 
 const SubInfoContainer = styled.div`

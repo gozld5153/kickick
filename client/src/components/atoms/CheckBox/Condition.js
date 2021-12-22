@@ -72,6 +72,10 @@ const InputContainer = styled.div`
   input[type="checkbox"] {
     display: none;
   }
+
+  @media ${({ theme }) => theme.device.mobileL} {
+    width: 96vw;
+  }
 `;
 
 const Icon = styled.div`
@@ -88,6 +92,10 @@ const ContextContainer = styled.label`
   align-items: center;
   width: ${({ width, height }) => `${width - height}rem`};
   cursor: pointer;
+
+  @media ${({ theme }) => theme.device.mobileL} {
+    width: 96vw;
+  }
 `;
 
 const Description = styled.div`
@@ -97,5 +105,9 @@ const Description = styled.div`
 
   :hover {
     background-color: ${({ theme }) => theme.color.conditionHover};
+  }
+
+  @media ${({ theme }) => theme.device.mobileL} {
+    width: ${96 / 1.2}vw;
   }
 `;

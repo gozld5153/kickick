@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
-import { postAlarm } from "../../../apis/alarm"
-import { dateConverter } from "../../../commons/utils/dateConverter"
+import { postAlarm } from "../../../apis/alarm";
+import { dateConverter } from "../../../commons/utils/dateConverter";
 import { alarmPageAction } from "../../../store/actions/socket";
 
 import { FaBell } from "react-icons/fa";
@@ -32,7 +32,7 @@ export default function AlarmBtn({ fontSize = "xl", socketClient }) {
           : obj.reference.table === "notices" && obj.type === "notices"
           ? "notice/소식"
           : "notice/이벤트";
-      
+
       if (obj.reference.table === "posts") {
         // 댓글 알람
         postAlarm(obj.alarm_id, 1)
@@ -50,7 +50,6 @@ export default function AlarmBtn({ fontSize = "xl", socketClient }) {
         navigate(`/${middleLink}/${obj.reference.id}`);
         setAlarmOpen(false);
       }
-        
     } else {
       // 포인트 획득 알람
       postAlarm(obj.alarm_id, 1)
@@ -68,15 +67,7 @@ export default function AlarmBtn({ fontSize = "xl", socketClient }) {
   const handleFetch = useCallback(
     (entry) => {
       if (entry[0].isIntersecting) {
-        console.log("알람 요청");
-        console.log(
-          "요청 여부",
-          alarmList.count,
-          socketChange.alarmPage.limit,
-          alarmList.count >= socketChange.alarmPage.limit
-        );
-
-        if (alarmList.count >= socketChange.alarmPage.limit) {
+        if (alarmList.all_count >= socketChange.alarmPage.limit) {
           dispatch(
             alarmPageAction(
               socketChange.alarmPage.page_num,
@@ -131,7 +122,7 @@ export default function AlarmBtn({ fontSize = "xl", socketClient }) {
         top="2.3rem"
         onMouseLeave={() => setAlarmOpen(false)}
       >
-        {alarmList.count ? (
+        {alarmList.all_count ? (
           alarmList.data.map((el) => (
             <DropdownList onClick={() => moveRefer(el)} key={el.alarm_id}>
               <DropdownContext>{el.content}</DropdownContext>
@@ -157,9 +148,6 @@ const Container = styled.div`
 `;
 
 const AlarmContainer = styled.button`
-  position: relative;
-  top: ${({ theme, fontSize }) =>
-    `${theme.fontSizes[fontSize].split("rem")[0] / 10}rem`};
   border-radius: 50%;
   color: ${({ theme }) => theme.color.font};
   font-size: ${({ theme, fontSize }) => theme.fontSizes[fontSize]};
@@ -167,7 +155,7 @@ const AlarmContainer = styled.button`
 
 const AlarmCounter = styled.div`
   position: absolute;
-  display: ${({ alarmLength }) => alarmLength === 0 ? "none" : "default"};
+  display: ${({ alarmLength }) => (alarmLength === 0 ? "none" : "default")};
   padding-top: ${({ theme, fontSize }) =>
     `${theme.fontSizes[fontSize].split("rem")[0] / 20}rem`};
   color: white;
@@ -255,8 +243,8 @@ const DropdownList = styled.li`
 
 const DropdownContext = styled.div`
   font-size: ${({ theme }) => theme.fontSizes.small};
-  white-space:nowrap;
-  pointer-events:none;
+  white-space: nowrap;
+  pointer-events: none;
 `;
 
 const DropdownCreated = styled(DropdownContext)`

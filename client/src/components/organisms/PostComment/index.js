@@ -9,19 +9,16 @@ import {
 } from "../../../apis/comments";
 import { PostCommentInput, PostCommentItem, RectLoading } from "../../";
 
-import {
-  commentSocketAction,
-  targetNameAction,
-} from "../../../store/actions/socket";
+import { targetNameAction } from "../../../store/actions/socket";
 
 import commenticon from "../../../assets/images/icon/commenticon.png";
 
 export default function PostComment({ post_id, themeCode }) {
   const dispatch = useDispatch();
   const test = useRef();
-  const { login, socket } = useSelector((state) => state);
+  const { login } = useSelector((state) => state);
   const { postInfo } = useSelector((state) => state.persist);
-  const [cmt, setCmt] = useState({ data: [] });
+  const [cmt, setCmt] = useState({ data: [], count: 0 });
   const [loading, setLoading] = useState(true);
   const [plusCmt, setPlusCmt] = useState(0);
   const [limit, setLimit] = useState(1);
@@ -50,7 +47,9 @@ export default function PostComment({ post_id, themeCode }) {
       })
       .then(() => setPlusCmt(plusCmt + 1))
       .then(() => dispatch(targetNameAction(postInfo.user.username)))
-      .then(() => dispatch(targetNameAction("")))
+      .then(() => {
+        setTimeout(() => dispatch(targetNameAction("")), 300);
+      })
       .catch((err) => console.log(err.response));
     setValue("");
   };

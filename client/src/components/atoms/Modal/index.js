@@ -17,6 +17,14 @@ export default function Modal({ handleModal, handleModalFunc, type }) {
       "이메일 인증이 필요합니다!",
       "회원가입시 작성한 이메일을 확인하신 후 인증해주세요.",
     ],
+    emptyTitle: [
+      "제목을 입력해 주세요!",
+      "글을 등록하기 위해서는 제목을 입력해야 합니다.",
+    ],
+    emptyContent: [
+      "내용을 입력해 주세요!",
+      "글을 등록하기 위해서는 내용을 입력해야 합니다.",
+    ],
   };
   return (
     <Container onClick={handleModal}>
@@ -41,7 +49,11 @@ export default function Modal({ handleModal, handleModalFunc, type }) {
               <button onClick={handleModalFunc}>Yes</button>
             </>
           )}
-          {type === "email" && <button onClick={handleModal}>확인</button>}
+          {(type === "email" ||
+            type === "emptyTitle" ||
+            type === "emptyContent") && (
+            <button onClick={handleModal}>확인</button>
+          )}
         </ButtonContainer>
       </Alarm>
     </Container>

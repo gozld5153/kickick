@@ -2,7 +2,7 @@ export const GET_CATEGORY = "GET_CATEGORY";
 export const GET_POST_NAME = "GET_POST_NAME";
 export const GET_CONTENT = "GET_CONTENT";
 export const GET_THUMBNAIL = "GET_THUMBNAIL";
-export const GET_KICK_CONTENT = "GET_KICK_CONTENT";
+export const GET_MAIN_CONTENT = "GET_MAIN_CONTENT";
 export const CHANGE_WRITE_MODE = "CHANGE_WRITE_MODE";
 export const RESET_POSTADD = "RESET_POSTADD";
 export const GO_BACK = "GO_BACK";
@@ -36,10 +36,10 @@ export const getContentAction = (content) => {
     payload: { content },
   };
 };
-export const getKickContentAction = (kick_content) => {
+export const getMainContentAction = (main_content) => {
   return {
-    type: GET_KICK_CONTENT,
-    payload: { kick_content },
+    type: GET_MAIN_CONTENT,
+    payload: { main_content },
   };
 };
 export const changeWriteModeAction = (mode) => {

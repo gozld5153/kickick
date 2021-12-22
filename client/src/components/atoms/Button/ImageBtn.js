@@ -63,7 +63,7 @@ export default function ImageBtn({
     <Container onClick={movePage}>
       <SpeechBubbleContainer>
         <BubbleImg src={talkBubble} alt="talkBubble" />
-        <BubbleText>{talk}</BubbleText>
+        <BubbleText file={file}>{talk}</BubbleText>
       </SpeechBubbleContainer>
       <ImageFrame>
         <MainImg src={file === "alien" ? alien : astronaut} alt="alien" />
@@ -80,14 +80,15 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top:1rem;
   font-family: ${({ theme }) => theme.fontFamily.blackHanSans};
   cursor: pointer;
 `;
 
 const SpeechBubbleContainer = styled.div`
   position: absolute;
-  top: -2vw;
-  left: 3.5vw;
+  top: 0;
+  right: 0;
   display: flex;
   justify-content:center;
   align-items: center;
@@ -95,14 +96,16 @@ const SpeechBubbleContainer = styled.div`
 
 const BubbleImg = styled.img`
   position: absolute;
-  width: 4vw;
+  top:-2rem;
+  right:-1rem;
+  width: 3rem;
 `;
 
 const BubbleText = styled.p`
   position: relative;
-  top: 0.1vw;
-  left:0.1vw;
-  white-space:nowrap;
+  top: -1.4rem;
+  right: ${({ file }) => (file === "alien" ? "-0.9rem" : "0rem")};
+  white-space: nowrap;
   z-index: 3;
 `;
 
@@ -110,13 +113,13 @@ const ImageFrame = styled.div`
 `;
 
 const MainImg = styled.img`
-  width:3vw;
+  width:2rem;
 `;
 
 const Context = styled.p`
   margin-bottom: 0.2vw;
-  width: 6.1vw;
-  padding: 0 0.1vw;
+  width: 4rem;
+  padding: 0 0.1rem;
   /* border-bottom: 1px solid ${({ color }) => color}; */
   color: ${({ color }) => color};
   text-align: center;

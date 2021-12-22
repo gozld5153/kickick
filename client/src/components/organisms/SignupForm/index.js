@@ -1,6 +1,6 @@
 
 import React, { useState, useRef } from "react";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -10,39 +10,13 @@ import { validation } from "../../../commons/utils/validation"
 
 export default function SignupForm() {
   const navigate = useNavigate();
-  const params = useParams();
   const isLogin = useSelector((state) => state.login.isLogin);
   const width = 30;
   const height = 3;
   const inputRef1 = useRef();
   const inputRef2 = useRef();
   const inputRef3 = useRef();
-  const ArrInfo = [
-    {
-      title: "닉네임",
-      type: "text",
-      part: "username",
-      placeholder: "username1234",
-      inputRef: inputRef1,
-      validation: (value) => validation("username", value),
-    },
-    {
-      title: "이메일",
-      type: "text",
-      part: "email",
-      placeholder: "email@gmail.com",
-      inputRef: inputRef2,
-      validation: (value) => validation("email", value),
-    },
-    {
-      title: "비밀번호",
-      type: "password",
-      part: "password",
-      placeholder: "1q2w3e4r!1",
-      inputRef: inputRef3,
-      validation: (value) => validation("password", value),
-    },
-  ];
+  const inputRef4 = useRef();
   const conditionArr = [
     {
       essential: true,
@@ -62,10 +36,48 @@ export default function SignupForm() {
   ];
 
 
-  const [inputValue, setInputValue] = useState({ type: params.type });
+  const [inputValue, setInputValue] = useState({ });
   const [isvalid, setIsVaild] = useState([]);
   const [isDuplicate, setIsDuplicate] = useState([false, false]);
-  const [conditionCheck,setConditionCheck] = useState({})
+  const [conditionCheck, setConditionCheck] = useState({})
+  
+  const ArrInfo = [
+    {
+      title: "닉네임",
+      type: "text",
+      part: "username",
+      placeholder: "ex) username1234",
+      inputRef: inputRef1,
+      validation: (data) => validation("username", data),
+    },
+    {
+      title: "이메일",
+      type: "text",
+      part: "email",
+      placeholder: "ex) email@gmail.com",
+      inputRef: inputRef2,
+      validation: (data) => validation("email", data),
+    },
+    {
+      title: "비밀번호",
+      type: "password",
+      part: "password",
+      placeholder: "ex) 1q2w3e4r!1",
+      inputRef: inputRef3,
+      validation: (data) => validation("password", data),
+    },
+    {
+      title: "비밀번호 확인",
+      type: "password",
+      part: "passwordCheck",
+      placeholder: "비밀번호를 다시 입력해 주세요",
+      inputRef: inputRef4,
+      validation: (data) =>
+        data === inputValue.password
+          ? { message: "pass", isValid: true }
+          : { message: "비밀번호가 일치하지 않습니다", isValid: false },
+    },
+  ];
 
 
   const conditonChecker = (key, value) => {
@@ -135,25 +147,28 @@ export default function SignupForm() {
     }
   }
 
+  console.log("inputValue", inputValue);
+
   return (
     <Container>
       {ArrInfo.map((el, idx) => (
-        <SignupInputBox
-          title={el.title}
-          type={el.type}
-          part={el.part}
-          width={width}
-          height={height}
-          placeholder={el.placeholder}
-          inputHandler={inputHandler}
-          duplicateCheckHanlder={duplicateCheckHanlder}
-          moveNextInput={moveNextInput}
-          inputRef={el.inputRef}
-          validation={el.validation}
-          vaildHanlder={vaildHanlder}
-          idx={idx}
-          key={idx}
-        />
+        <div key={idx}>
+          <SignupInputBox
+            title={el.title}
+            type={el.type}
+            part={el.part}
+            width={width}
+            height={height}
+            placeholder={el.placeholder}
+            inputHandler={inputHandler}
+            duplicateCheckHanlder={duplicateCheckHanlder}
+            moveNextInput={moveNextInput}
+            inputRef={el.inputRef}
+            validation={el.validation}
+            vaildHanlder={vaildHanlder}
+            idx={idx}
+          />
+        </div>
       ))}
       <DatePicker width={width} height={height} inputHandler={inputHandler} />
       <ConditionChamber
@@ -176,6 +191,11 @@ const Container = styled.div`
   min-height: 79vh;
   align-items: center;
   width: ${({ width }) => `${width}rem`};
+
+  @media ${({ theme }) => theme.device.mobileL} {
+    width: 100vw;
+    padding: 0 2vw;
+  }
 `;
 
 const SubmitContainer = styled.div`

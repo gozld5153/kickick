@@ -7,7 +7,7 @@ import ufo from "../../../assets/images/ufo.png";
 export default function NavBtn({
   context = "버튼",
   pathname = "",
-  size = "1rem",
+  size = "0.9rem",
   color = "",
   fontFamily = `'Jua', sans-serif`,
   backgroundColor,
@@ -106,6 +106,7 @@ const MainBtn = styled.div`
   font-size: ${({ size }) => size};
   font-family: ${({ fontFamily }) => fontFamily};
   color: ${({ color, theme }) => (color ? color : theme.color.font)};
+  white-space:nowrap;
   border-radius: ${({ size }) => `${size.replace("rem", "") / 2}rem`};
   background-color: ${({ backgroundColor }) => backgroundColor};
   cursor: pointer;
@@ -183,11 +184,16 @@ const SubBtn = styled.img`
 
 const SubTitle = styled.span`
   position: absolute;
-  top: ${({ size }) => `${size.split("rem")[0] * 0.7}rem`};
+  top: ${({ size, name }) =>
+    name === "이벤트"
+      ? `${size.split("rem")[0] * 0.8}rem`
+      : `${size.split("rem")[0] * 0.65}rem`};
   left: ${({ size, name }) =>
     name === "이벤트"
       ? `${size.split("rem")[0] * 0.6}rem`
-      : `${size.split("rem")[0] * 0.85}rem`};
+      : `${size.split("rem")[0] * 0.65}rem`};
+  font-size: ${({ size, name }) =>
+    name === "이벤트" ? `${size.split("rem")[0] * 0.7}rem` : "1rem"};
   font-family: ${({ theme }) => theme.fontFamily.jua};
   white-space: nowrap;
 `;

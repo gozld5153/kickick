@@ -1,42 +1,51 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import { useParams } from "react-router";
+import { useParams, useLocation } from "react-router";
 
-import study from "../../../assets/images/planet/studyplanet.png";
-import leisure from "../../../assets/images/planet/leisure.png";
-import life from "../../../assets/images/planet/life.png";
-import economy from "../../../assets/images/planet/economy.png";
-import trip from "../../../assets/images/planet/trip.png";
-import art from "../../../assets/images/planet/art.png";
-import sun from "../../../assets/images/sun.png";
-import moon from "../../../assets/images/moon.png";
+import studyplanet from "../../../assets/images/category/studyplanet.png";
+import leisureplanet from "../../../assets/images/category/leisureplanet.png";
+import lifeplanet from "../../../assets/images/category/lifeplanet.png";
+import economyplanet from "../../../assets/images/category/economyplanet.png";
+import travelplanet from "../../../assets/images/category/travelplanet.png";
+import artplanet from "../../../assets/images/category/artplanet.png";
+import noticeplanet from "../../../assets/images/icon/introductionicon.png";
+import eventplanet from "../../../assets/images/icon/contenticon.png";
+import studyland from "../../../assets/images/category/studyland.png";
+import leisureland from "../../../assets/images/category/leisureland.png";
+import lifeland from "../../../assets/images/category/lifeland.png";
+import economyland from "../../../assets/images/category/economyland.png";
+import travelland from "../../../assets/images/category/travelland.png";
+import artland from "../../../assets/images/category/artland.png";
+import noticeland from "../../../assets/images/category/noticeland.png";
+import eventland from "../../../assets/images/category/eventland.png";
+
 import cloud from "../../../assets/images/colorCloud.png";
 import star from "../../../assets/images/stars.png";
-import spacebackground from "../../../assets/images/space_background.jpg";
 
 const list = [
-  { label: "study", src: study, category: "학습", color: "#4aa6c1" },
-  { label: "leisure", src: leisure, category: "여가", color: "#DDB362" },
-  { label: "life", src: life, category: "생활", color: "#5070B6" },
-  { label: "economy", src: economy, category: "경제", color: "#DE5C8A" },
-  { label: "travel", src: trip, category: "여행", color: "#D04E3E" },
-  { label: "art", src: art, category: "예술", color: "#EED548" },
-  { label: "notice", src: sun, category: "소식", color: "#EED548" },
-  { label: "event", src: moon, category: "이벤트", color: "#EED548" },
-  // { label: "", src: "", category: "default", color: "#000000" },
+  { label: "study", src: [studyland, studyplanet], category: "학습" },
+  { label: "leisure", src: [leisureland, leisureplanet], category: "여가" },
+  { label: "life", src: [lifeland, lifeplanet], category: "생활" },
+  { label: "economy", src: [economyland, economyplanet], category: "경제" },
+  { label: "travel", src: [travelland, travelplanet], category: "여행" },
+  { label: "art", src: [artland, artplanet], category: "예술" },
+  { label: "notice", src: [noticeland, noticeplanet], category: "소식" },
+  { label: "event", src: [eventland, eventplanet], category: "이벤트" },
 ];
 
 export default function BoardTop({ themeCode }) {
   const { category } = useParams();
-  const { color } = list.find((el) => el.category === category);
+  const { pathname } = useLocation();
   const [select, setSelect] = useState(0);
+  const page = pathname.split("/")[1];
 
   useEffect(() => {
     setSelect(list.findIndex((el) => category === el.category));
   }, [category]);
+
   return (
-    <Container image={spacebackground} color={color} cloud={cloud}>
+    <Container cloud={cloud}>
       {themeCode === "light" ? (
         <img className="cloud" src={cloud} alt="" />
       ) : (
@@ -47,12 +56,18 @@ export default function BoardTop({ themeCode }) {
           list.map((el, idx) => {
             return (
               <ListContainer
+                key={idx}
                 style={{
                   marginTop: idx === 0 ? `-${select * 5}rem` : 0,
                 }}
               >
-                <img src={el.src} alt="" />
+                <img
+                  src={themeCode === "light" ? el.src[0] : el.src[1]}
+                  alt=""
+                />
+
                 <span>{el.label}</span>
+                {page === "kickboard" && <h3>KICK</h3>}
               </ListContainer>
             );
           })}
@@ -65,11 +80,11 @@ const Container = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  height: 12rem;
+  height: 10rem;
 
   justify-content: center;
   gap: 1rem;
-  font-size: 4rem;
+  font-size: 3.5rem;
   background: ${({ theme }) => theme.color.Back} !important;
 
   pointer-events: none !important;
@@ -86,6 +101,19 @@ const Container = styled.div`
     margin-top: 1rem;
     font-family: "Luckiest Guy", cursive;
     text-shadow: 0.4rem 0.4rem 0.3rem gray;
+    letter-spacing: 0.2rem;
+  }
+
+  h3 {
+    margin-left: 1rem;
+    margin-top: 0.2rem;
+    color: ${({ theme }) => theme.color.font};
+    font-family: "Luckiest Guy", cursive;
+    font-size: 2rem;
+    padding: 0.8rem 0.8rem 0 0.8rem;
+    border-radius: 0.5rem;
+    background: ${({ theme }) => theme.color.boardTopKick};
+    letter-spacing: 0.1rem;
   }
 `;
 
@@ -96,17 +124,19 @@ const Lists = styled.div`
   text-align: center;
   overflow: hidden;
   img {
-    width: 4.5rem;
-    height: 4.5rem;
+    width: 4rem;
+    height: 4rem;
     filter: drop-shadow(0.2rem 0.2rem 0.3rem gray);
     z-index: 5;
+    margin-right: 1rem;
   }
 `;
 
 const ListContainer = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 5rem;
-
+  width: 30rem;
   transition: all 0.5s linear;
 `;

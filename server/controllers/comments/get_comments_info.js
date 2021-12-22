@@ -1,4 +1,4 @@
-const { users, posts, comments } = require("../../models");
+const { users, posts, comments, kicks } = require("../../models");
 const jwt = require("jsonwebtoken");
 
 module.exports = async (req, res) => {
@@ -15,24 +15,6 @@ module.exports = async (req, res) => {
     const post_id = req.query.post_id;
 
     try {
-      data = await posts.findOne({
-        attributes: ["id"],
-        where: {
-          id: post_id,
-        },
-        include: [
-          {
-            model: comments,
-            attributes: [["id", "comment_id"], "content", "created_at"],
-            include: [
-              {
-                model: users,
-                attributes: ["username", "profile"],
-              },
-            ],
-          },
-        ],
-      });
       const comment_info = await comments.findAndCountAll({
         attributes: [["id", "comment_id"], "content", "created_at"],
         offset: limit * (page_num - 1),
@@ -90,15 +72,22 @@ module.exports = async (req, res) => {
 
   try {
     const comment_info = await comments.findAndCountAll({
-      attributes: ["post_id", "content", "created_at"],
+      attributes: [["id", "comment_id"], "content", "created_at"],
       offset: limit * (page_num - 1),
       limit: limit,
       distinct: true,
       order: [["id", "DESC"]],
+
       include: [
         {
           model: posts,
-          attributes: ["post_name"],
+          attributes: [["id", "post_id"], "post_name"],
+          include: [
+            {
+              model: kicks,
+              attributes: [["id", "kick_id"], "thumbnail"],
+            },
+          ],
         },
         {
           model: users,

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router";
+import disableScroll from "disable-scroll";
 
 import { Profile, Common, BarChart } from "../../../components";
 
@@ -214,6 +215,16 @@ const KickConfirmUser = styled.div`
   }
   .datetime {
     margin-left: auto;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0.3rem;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #0c0c42;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: grey;
   }
 `;
 

@@ -13,15 +13,17 @@ import {
   DragDrop,
   Thumbnail,
   Profile,
+  Spinner,
 } from "../../components";
 
 import { createNotices } from "../../apis/notices";
 import { uploadSingleImage } from "../../apis/upload";
+
 import {
   getCategoryAction,
   getPostNameAction,
   getContentAction,
-  getKickContentAction,
+  getMainContentAction,
   resetPostAddAction,
 } from "../../store/actions/postadd";
 
@@ -35,11 +37,13 @@ export default function EditNotice() {
   const navigate = useNavigate();
   const { category } = useParams();
   const { postAdd, login, themeMode } = useSelector((state) => state);
-  const [postname, setPostname] = useState();
-  const [intro, setIntro] = useState();
+  const [postname, setPostname] = useState("");
+  const [intro, setIntro] = useState("");
   const [content, setContent] = useState("");
   const [thumbnail, setThumbnail] = useState();
   const [file, setFile] = useState();
+  const [disabed, setDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handlePostName = (e) => {
     dispatch(getPostNameAction(e.target.value));
@@ -55,10 +59,12 @@ export default function EditNotice() {
   };
 
   const handleContent = () => {
-    dispatch(getKickContentAction(content));
+    dispatch(getMainContentAction(content));
   };
 
   const handleClick = () => {
+    setDisabled(true);
+    setLoading(true);
     if (thumbnail) {
       const formData = new FormData();
       formData.append("img", thumbnail);
@@ -66,10 +72,10 @@ export default function EditNotice() {
         const location = data.data.data.location;
         createNotices({
           type: category === "이벤트" ? "events" : "notices",
-          notice_name: postAdd.post_name,
+          notice_name: postname,
           summary: postAdd.content,
           thumbnail: location,
-          content: postAdd.kick_content,
+          content: content,
         })
           .then(() =>
             dispatch(
@@ -85,7 +91,8 @@ export default function EditNotice() {
                 : noticeSocketAction(false)
             )
           )
-          .then(() => navigate(-1))
+          .then(() => setLoading(true))
+          .then(() => navigate(`/notice/${category}`))
           .catch((err) => console.log(err));
       });
     }
@@ -95,7 +102,7 @@ export default function EditNotice() {
     dispatch(resetPostAddAction());
     dispatch(getCategoryAction(category));
   }, [dispatch, category]);
-
+  if (loading) return <Spinner />;
   return (
     <Container>
       <WritePage>
@@ -128,7 +135,12 @@ export default function EditNotice() {
         </InfoContainer>
 
         <BtnContainer>
-          <Common label="등 록" type="bigger" handleClick={handleClick} />
+          <Common
+            label="등 록"
+            type="bigger"
+            handleClick={handleClick}
+            disabled={disabed}
+          />
         </BtnContainer>
       </WritePage>
       <ViewPage>
@@ -185,6 +197,7 @@ const ViewPage = styled.div`
     font-size: 2.8rem;
     height: 4.5rem;
     padding: 0.5rem;
+    color: ${({ theme }) => theme.color.font};
   }
 
   > img {
@@ -231,6 +244,7 @@ const ProfileContainer = styled.div`
   display: flex;
   align-items: center;
   font-weight: bold;
+  color: ${({ theme }) => theme.color.font};
   img {
     margin-right: 1rem;
   }

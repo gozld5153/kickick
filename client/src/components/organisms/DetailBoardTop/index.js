@@ -17,7 +17,7 @@ export default function DetailBoardTop({ postInfo, type, themeCode }) {
           </UserContainer>
           <CountContainer>
             <span>
-              게시일 <strong>{postInfo.created_at.split("T")[0]}</strong>
+              게시일 <strong>{postInfo.created_at}</strong>
             </span>
             <span>
               조회<strong>{postInfo.view_count}</strong>
@@ -36,9 +36,11 @@ export default function DetailBoardTop({ postInfo, type, themeCode }) {
           </CountContainer>
         </UserAndCountContainer>
         <TagContainer>
-          {postInfo.tags.map((tag) => (
-            <span key={tag.tag_id}># {tag.content}</span>
-          ))}
+          {postInfo.tags
+            .filter((_, idx) => idx !== 0)
+            .map((tag) => (
+              <span key={tag.tag_id}># {tag.content}</span>
+            ))}
         </TagContainer>
       </TopContainer>
       <Content>

@@ -5,6 +5,7 @@ const {
   comments,
   likes,
   posts_tags,
+  users_kicks,
   tags,
   logs,
 } = require("../../models");
@@ -96,7 +97,6 @@ module.exports = async (req, res) => {
             for (let el of Object.keys(tag_id_obj)) {
               op_array.push({ tag_id: tag_id_obj[el] });
             }
-            console.log(op_array);
 
             let post_info = await posts.findAll({
               attributes: [
@@ -126,7 +126,13 @@ module.exports = async (req, res) => {
                 },
                 {
                   model: kicks,
-                  attributes: ["id", "thumbnail"],
+                  attributes: [["id", "kick_id"], "thumbnail"],
+                  include: [
+                    {
+                      model: users_kicks,
+                      attributes: ["user_id"],
+                    },
+                  ],
                 },
                 {
                   model: comments,
@@ -174,6 +180,22 @@ module.exports = async (req, res) => {
               // tags 가공
               post.tags = post.posts_tags.map((tag) => tag.tag.content);
               delete post.posts_tags;
+
+              // user_id 로 샀는지 안샀는지 확인하고 값 추가
+              // post.kick.kick_id로 확인
+
+              post.is_purchased = false;
+              if (post.kick) {
+                if (user_id && post.kick.users_kicks.length !== 0) {
+                  for (let el of post.kick.users_kicks) {
+                    if (el.user_id === user_id) {
+                      post.is_purchased = true;
+                      break;
+                    }
+                  }
+                  delete post.kick.users_kicks;
+                }
+              }
             });
           }
         }
@@ -193,6 +215,28 @@ module.exports = async (req, res) => {
 
   const today = new Date();
   const prev_3days = new Date(today - 3600000 * 24 * 3);
+
+  // 토큰이 있으면 샀는지 안샀는지 확인을 위해 user_id 구함
+  let user_id;
+  if (req.cookies.token) {
+    const token = req.cookies.token.access_token;
+    let decoded;
+
+    try {
+      decoded = jwt.verify(token, process.env.ACCESS_SECRET);
+      const { username } = decoded;
+      let user_info = await users.findOne({
+        attributes: [["id", "user_id"]],
+        where: {
+          username: username,
+        },
+        raw: true,
+      });
+      user_id = user_info.user_id;
+    } catch (err) {
+      user_id = null;
+    }
+  }
 
   let data_by_3days;
   try {
@@ -226,7 +270,13 @@ module.exports = async (req, res) => {
         },
         {
           model: kicks,
-          attributes: ["id", "thumbnail"],
+          attributes: [["id", "kick_id"], "thumbnail"],
+          include: [
+            {
+              model: users_kicks,
+              attributes: ["user_id"],
+            },
+          ],
         },
         {
           model: comments,
@@ -249,6 +299,7 @@ module.exports = async (req, res) => {
         },
       ],
     });
+    data_by_3days = data_by_3days.map((el) => el.get({ plain: true }));
     // 각 게시물에 접근
     data_by_3days.forEach((post) => {
       // likes 가공
@@ -268,11 +319,29 @@ module.exports = async (req, res) => {
       // tags 가공
       post.tags = post.posts_tags.map((tag) => tag.tag.content);
       delete post.posts_tags;
+
+      // user_id 로 샀는지 안샀는지 확인하고 값 추가
+      // post.kick.kick_id로 확인
+
+      post.is_purchased = false;
+
+      if (post.kick) {
+        if (user_id && post.kick.users_kicks.length !== 0) {
+          for (let el of post.kick.users_kicks) {
+            if (el.user_id === user_id) {
+              post.is_purchased = true;
+              break;
+            }
+          }
+          delete post.kick.users_kicks;
+        }
+      }
     });
   } catch (err) {
     console.log(err);
     return res.status(400).json({ data: err, message: "데이터베이스 에러" });
   }
+
   let data_by_time;
 
   try {
@@ -303,7 +372,13 @@ module.exports = async (req, res) => {
         },
         {
           model: kicks,
-          attributes: ["id", "thumbnail"],
+          attributes: [["id", "kick_id"], "thumbnail"],
+          include: [
+            {
+              model: users_kicks,
+              attributes: ["user_id"],
+            },
+          ],
         },
         {
           model: comments,
@@ -326,6 +401,8 @@ module.exports = async (req, res) => {
         },
       ],
     });
+    data_by_time = data_by_time.map((el) => el.get({ plain: true }));
+
     // 각 게시물에 접근
     data_by_time.forEach((post) => {
       // likes 가공
@@ -345,6 +422,23 @@ module.exports = async (req, res) => {
       // tags 가공
       post.tags = post.posts_tags.map((tag) => tag.tag.content);
       delete post.posts_tags;
+
+      // user_id 로 샀는지 안샀는지 확인하고 값 추가
+      // post.kick.kick_id로 확인
+
+      post.is_purchased = false;
+
+      if (post.kick) {
+        if (user_id && post.kick.users_kicks.length !== 0) {
+          for (let el of post.kick.users_kicks) {
+            if (el.user_id === user_id) {
+              post.is_purchased = true;
+              break;
+            }
+          }
+          delete post.kick.users_kicks;
+        }
+      }
     });
   } catch (err) {
     console.log(err);

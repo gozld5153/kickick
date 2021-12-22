@@ -45,7 +45,7 @@ export default function Calendar({ standardSize = "0.7", unit="vw", backColor="b
       backColor={backColor}
     >
       <Title standardSize={standardSize} unit={unit}>
-        - 12월 출석판 -
+        {`- ${new Date().getMonth() + 1}월 출석판 -`}
       </Title>
       <DatePicker
         locale={ko}

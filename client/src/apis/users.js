@@ -1,4 +1,3 @@
-import { AiOutlineConsoleSql } from "react-icons/ai";
 import api from "./";
 /**
  * Query가 있으면 Query로 검색(email / username 둘 중 하나만)

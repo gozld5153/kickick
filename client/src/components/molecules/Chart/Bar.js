@@ -1,9 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 import Chartjs from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 
 export default function Chart({ data }) {
+  const { themeMode } = useSelector((state) => state);
+  console.log(themeMode);
   const finaldata = {
     type: "bar",
     labels: ["혁신", "괴짜"],
@@ -23,10 +26,10 @@ export default function Chart({ data }) {
         options={{
           indexAxis: "y",
           maintainAspectRatio: false,
+
           plugins: {
-            datalabels: {
-              display: true,
-              color: "black",
+            tooltip: {
+              titleFont: {},
             },
             legend: {
               display: false,
@@ -37,7 +40,12 @@ export default function Chart({ data }) {
               grid: { display: false },
               ticks: { display: false },
             },
-            y: { grid: { display: false } },
+            y: {
+              grid: { display: false },
+              ticks: {
+                color: themeMode[1] === "light" ? "#444" : "#fff",
+              },
+            },
           },
         }}
       />

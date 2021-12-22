@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import disableScroll from "disable-scroll";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import {
   Align,
   Select,
@@ -23,8 +23,7 @@ import {
 import { addTagAction, delTagAction } from "../../../store/actions/postadd";
 
 export default function TotalSearch({ type }) {
-  const { pathname } = useLocation();
-  const [page, category] = decodeURI(pathname).slice(1).split("/");
+  const { category } = useParams();
   const navigate = useNavigate();
   const { isLogin } = useSelector((state) => state.login);
   const [modal, setModal] = useState(false);

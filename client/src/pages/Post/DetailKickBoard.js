@@ -70,7 +70,3 @@ const RightContainer = styled.div`
     width: 100%;
   }
 `;
-
-const Temporary = styled.div`
-  height: 100vh;
-`;

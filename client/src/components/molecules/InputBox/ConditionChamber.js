@@ -27,7 +27,12 @@ const Container = styled.div`
   flex-direction: column;
   width: ${({ width }) => `${width}rem`};
   margin-top: ${({ height }) => `${height}rem`};
-  border-bottom: ${({ height,theme }) => `${height / 25}rem solid ${theme.color.border}`};
+  border-bottom: ${({ height, theme }) =>
+    `${height / 25}rem solid ${theme.color.border}`};
+
+  @media ${({ theme }) => theme.device.mobileL} {
+    width: 96vw;
+  }
 `;
 
 const InputTitle = styled.div`

@@ -60,14 +60,11 @@ const Selected = styled.div`
 
 const Options = styled.div`
   position: absolute;
-  top: 2.5rem;
+  top: 2rem;
   width: 7rem;
 
-  background-color: ${({ theme }) => theme.color.select};
+  background-color: ${({ theme }) => theme.color.options};
   color: ${({ theme }) => theme.color.font};
-
-  /* border-radius: 0.25rem; */
-  /* box-shadow: 0.5px 0.5px 5px ${({ theme }) => theme.color.shadow}; */
 
   cursor: pointer;
 

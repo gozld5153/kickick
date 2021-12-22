@@ -48,6 +48,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: ${({ width }) => `${width}rem`};
+
+  @media ${({ theme }) => theme.device.mobileL} {
+    width: 96vw;
+  }
 `;
 
 const InputTitle = styled.div`

@@ -80,7 +80,9 @@ export default function Board({ themeCode, list }) {
   );
 }
 
-const BigContainer = styled.div``;
+const BigContainer = styled.div`
+  min-height: 79vh;
+`;
 const Container = styled.div`
   display: flex;
   margin: 0 auto;

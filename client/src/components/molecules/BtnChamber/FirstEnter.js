@@ -1,22 +1,22 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-import { ImageBtn } from "../../../components"
-import earth from "../../../assets/images/planet/leisure.png"
+import { ImageBtn } from "../../../components";
+import earth from "../../../assets/images/category/lifeplanet.png";
 
 export default function FirstEnter() {
   const [locate, setLocate] = useState({ x: 0, y: 0 });
   const [firstlocate, setFirstLocate] = useState({ x: 0, y: 0 });
   const [isMouseDown, setIsMouseDowm] = useState(false);
-  
+
   const mouseMoveHanlder = (e) => {
     if (isMouseDown) {
       setLocate({
-        x: (firstlocate.x - e.clientX),
-        y: (firstlocate.y - e.clientY),
+        x: firstlocate.x - e.clientX,
+        y: firstlocate.y - e.clientY,
       });
     }
-  }
+  };
 
   // 마우스에 따라 모달창이 이동하는 로직.
 
@@ -61,10 +61,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 20vw;
-  height: 25vw;
-  padding: 2vw 0;
-  border-radius: 0.2vw;
+  width: 15rem;
+  height: 18rem;
+  padding: 2rem 0;
+  border-radius: 0.5rem;
   background-color: white;
 `;
 
@@ -72,23 +72,23 @@ const TitleContainer = styled.article`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 0 4vw 0;
-  pointer-events:none;
+  margin: 0 0 1rem 0;
+  pointer-events: none;
 `;
 
 const Planet = styled.img`
   position: relative;
-  left: 0.3vw;
-  width: 7vw;
-  margin-bottom: 1vw;
+  left: 0;
+  width: 5rem;
+  margin-bottom: 0.5rem;
 `;
 
 const Title = styled.p`
-  font-size: 2vw;
+  font-size: 1rem;
   font-family: ${({ theme }) => theme.fontFamily.blackHanSans};
 `;
 
 const ContextContainer = styled.article`
   display: flex;
-  gap: 3vw;
+  gap: 2rem;
 `;

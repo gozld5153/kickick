@@ -1,15 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import lifeplanet from "../../assets/images/planet/lifeplanet.png";
+import { useSelector } from "react-redux";
+import lifeplanet from "../../assets/images/category/lifeplanet.png";
+import contenticon from "../../assets/images/icon/contenticon.png";
 
 export default function Page404() {
   const navigate = useNavigate();
+  const { themeMode } = useSelector((state) => state);
   return (
     <Container>
       <div className="headline">
         <span>4</span>
-        <img src={lifeplanet} alt="" />
+        <img src={themeMode[1] === "light" ? lifeplanet : contenticon} alt="" />
         <span>4</span>
       </div>
       <p className="title">
@@ -40,20 +43,30 @@ const Container = styled.div`
     gap: 0.5rem;
 
     span {
-      color: #5070b6;
+      color: ${({ theme }) => theme.color.page404};
       font-size: 9rem;
+      @media ${({ theme }) => theme.device.tablet} {
+        font-size: 6rem;
+      }
     }
     img {
       width: 7rem;
       height: 7rem;
+      @media ${({ theme }) => theme.device.tablet} {
+        width: 5rem;
+        height: 5rem;
+      }
     }
   }
 
   .title {
     font-size: 1.5rem;
-    color: #5070b6;
+    color: ${({ theme }) => theme.color.page404};
     text-align: center;
     line-height: 2;
+    @media ${({ theme }) => theme.device.tablet} {
+      font-size: 1.1rem;
+    }
   }
 
   .subtitle {
@@ -74,6 +87,11 @@ const ButtonContainer = styled.div`
     width: 10rem;
     border: 1px solid #eee;
     border-radius: 0.5rem;
+
+    @media ${({ theme }) => theme.device.tablet} {
+      font-size: 0.9rem;
+      width: 6rem;
+    }
   }
 
   .goback {

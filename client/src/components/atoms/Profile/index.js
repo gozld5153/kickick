@@ -33,7 +33,7 @@ const Container = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 8rem;
+    width: 6rem;
   }
 `;
 const Image = styled.img`

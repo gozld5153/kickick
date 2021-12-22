@@ -13,7 +13,9 @@ import {
   IconBox,
   Profile,
   Spinner,
+  Modal,
 } from "../../components";
+
 import Page404 from "../Error/Page404";
 import {
   getCategoryAction,
@@ -22,7 +24,6 @@ import {
 import { createPost, createTag } from "../../apis/posts";
 
 export default function EditBoard({ themeCode, list }) {
-  const [loading, setLoading] = useState(true);
   const { category } = useParams();
   const navigate = useNavigate();
   const { postAdd, login } = useSelector((state) => state);
@@ -30,6 +31,10 @@ export default function EditBoard({ themeCode, list }) {
   const [content, setContent] = useState("");
   const [tagArr, setTagArr] = useState([]);
   const [title, setTitle] = useState("");
+  const [disabed, setDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [type, setType] = useState("");
 
   const handleChange = (e) => {
     setTitle(e.target.value);
@@ -40,13 +45,24 @@ export default function EditBoard({ themeCode, list }) {
   };
 
   const handleClick = () => {
-    createPost(postAdd.category, title, content)
-      .then((data) => {
-        createTag(data.data.data.post_id, [category, ...tagArr])
-          .then(() => navigate(`/board/${category}`))
-          .catch((err) => console.log(err.response));
-      })
-      .catch((err) => console.log(err.response));
+    if (!title) {
+      setType("emptyTitle");
+      setModal(true);
+    } else if (!content) {
+      setType("emptyContent");
+      setModal(true);
+    } else {
+      setDisabled(true);
+      setLoading(true);
+      createPost(postAdd.category, title, content)
+        .then((data) => {
+          createTag(data.data.data.post_id, [category, ...tagArr])
+            .then(() => navigate(`/board/${category}`))
+            .catch((err) => console.log(err.response));
+        })
+        .then(() => setLoading(false))
+        .catch((err) => console.log(err.response));
+    }
   };
 
   useEffect(() => {
@@ -54,8 +70,14 @@ export default function EditBoard({ themeCode, list }) {
     dispatch(getCategoryAction(category));
     setLoading(false);
   }, [category, dispatch]);
-  if (!list.find((el) => el === category)) return <Page404 />;
+
+  const handleModalOff = () => {
+    setModal(false);
+  };
+
   if (loading) return <Spinner />;
+  if (!list.find((el) => el === category)) return <Page404 />;
+
   return (
     <Container>
       <WriteBox>
@@ -69,8 +91,14 @@ export default function EditBoard({ themeCode, list }) {
         />
         <BtnContainer>
           <IconBox label="arrow" handleClick={handleMovePage} />
-          <Common label="등 록" type="bigger" handleClick={handleClick} />
+          <Common
+            label="등 록"
+            type="bigger"
+            handleClick={handleClick}
+            disabled={disabed}
+          />
         </BtnContainer>
+        {modal ? <Modal handleModal={handleModalOff} type={type} /> : null}
       </WriteBox>
 
       <ViewBox>

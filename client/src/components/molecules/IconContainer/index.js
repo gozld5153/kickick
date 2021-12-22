@@ -34,12 +34,22 @@ export default function IconContainer({ themeCode }) {
     } else if (label === "edit") {
       navigate(`/myeditboard/${category()}/${post_id}`);
     } else if (label === "heart") {
+      if (!login.isLogin || login.isLogin.type === "guest") {
+        setModal(true);
+        disableScroll.on();
+        return;
+      }
       createFavorites(post_id)
         .then(() => {
           setHeart(true);
         })
         .catch((err) => console.log(err.response));
     } else if (label === "red") {
+      if (!login.isLogin || login.isLogin.type === "guest") {
+        setModal(true);
+        disableScroll.on();
+        return;
+      }
       delFavorites(post_id)
         .then(() => {
           setHeart(false);
@@ -70,6 +80,12 @@ export default function IconContainer({ themeCode }) {
 
   const handleDisableScroll = () => {
     disableScroll.off();
+  };
+
+  const handleMoveLogin = () => {
+    setModal(false);
+    disableScroll.off();
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -112,11 +128,19 @@ export default function IconContainer({ themeCode }) {
         />
       )}
       {modal ? (
-        <Modal
-          handleModal={handleModalOff}
-          handleModalFunc={handleDelPost}
-          type="del"
-        />
+        !login.isLogin || login.isLogin.type === "guest" ? (
+          <Modal
+            handleModal={handleModalOff}
+            handleModalFunc={handleMoveLogin}
+            type="login"
+          />
+        ) : (
+          <Modal
+            handleModal={handleModalOff}
+            handleModalFunc={handleDelPost}
+            type="del"
+          />
+        )
       ) : null}
     </Container>
   );

@@ -2,7 +2,7 @@ import {
   GET_CATEGORY,
   GET_POST_NAME,
   GET_CONTENT,
-  GET_KICK_CONTENT,
+  GET_MAIN_CONTENT,
   RESET_POSTADD,
 } from "../actions/postadd";
 
@@ -11,7 +11,7 @@ const initialState = {
   category: "",
   post_name: "",
   content: "",
-  kick_content: "",
+  main_content: "",
 };
 export default function postAddReducer(state = initialState, action) {
   switch (action.type) {
@@ -21,7 +21,7 @@ export default function postAddReducer(state = initialState, action) {
       return { ...state, ...action.payload };
     case GET_CONTENT:
       return { ...state, ...action.payload };
-    case GET_KICK_CONTENT:
+    case GET_MAIN_CONTENT:
       return { ...state, ...action.payload };
     case RESET_POSTADD:
       return initialState;

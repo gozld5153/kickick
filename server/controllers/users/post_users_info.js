@@ -88,6 +88,7 @@ module.exports = async (req, res) => {
       await users.create({
         ...req.body,
         password: hash,
+        kick_money: 300,
       });
     });
 

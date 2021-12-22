@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import Chartjs from "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
-import { dropRight } from "lodash";
 
 export default function DonutChart({ data }) {
   const finaldata = {

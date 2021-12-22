@@ -197,9 +197,8 @@ export default function ProfileEditForm() {
       <Container>
         <ListContainer>
           {profileInputList.map((el) => (
-            <ProfileContainer type={el.type}>
+            <ProfileContainer key={el.head} type={el.type}>
               <ProfileInput
-                key={el.head}
                 head={el.head}
                 type={el.type}
                 placeholder={el.placeholder}

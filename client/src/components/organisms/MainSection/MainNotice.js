@@ -34,7 +34,6 @@ const Container = styled.div`
 const Thumpnail = styled.img`
   width: 40vw;
   height: 25vw;
-  background-color:black;
 `;
 
 const ContextContainer = styled.article`

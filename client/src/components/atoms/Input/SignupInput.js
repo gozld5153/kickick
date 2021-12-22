@@ -71,7 +71,7 @@ export default function SignupInput({
           type={type}
           value={inputValue}
           height={height}
-          placeholder={`ex) ${placeholder}`}
+          placeholder={placeholder}
           ref={inputRef}
         />
         <Duplication
@@ -121,6 +121,11 @@ const Container = styled.div`
   border-radius: ${({ height }) => `${height * 0.04}rem`};
   background-color: ${({ theme }) => theme.color.modalBack};
   overflow: hidden;
+
+  @media ${({ theme }) => theme.device.mobileL} {
+    justify-content: center;
+    width: inherit;
+  }
 `;
 
 const Input = styled.input`
@@ -136,13 +141,18 @@ const Input = styled.input`
     opacity: 0.7;
     color: ${({ theme }) => theme.color.placeholderGray};
   }
+
+  @media ${({ theme }) => theme.device.mobileL} {
+    font-size: ${({ height }) => `${height * 0.5}rem`};
+  }
 `;
 
 const Warning = styled.div`
   padding-left: ${({ height }) => `${height / 15}rem`};
   visibility: ${({ isChange, validation, inputValue, isDuplicate, part }) =>
     !isChange ||
-    (validation(inputValue).isValid && (isDuplicate || part === "password"))
+    (validation(inputValue).isValid &&
+      (isDuplicate || part === "password" || part === "passwordCheck"))
       ? "hidden"
       : "visible"};
   font-family: ${({ theme }) => theme.fontFamily.jua};
@@ -155,7 +165,10 @@ const Duplication = styled.button`
   right: 0;
   bottom: ${({ height }) => `${height / 4.5}rem`};
   display: ${({ part, vaildMessage, isDuplicate }) =>
-    part !== "password" && vaildMessage === "pass" && !isDuplicate
+    part !== "password" &&
+    part !== "passwordCheck" &&
+    vaildMessage === "pass" &&
+    !isDuplicate
       ? "default"
       : "none"};
   width: ${({ height }) => `${height * 1.5}rem`};
